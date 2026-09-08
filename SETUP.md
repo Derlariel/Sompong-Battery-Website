@@ -31,13 +31,15 @@ Sign in at `/admin/login`. Re-running the seed preserves edited content and exis
 
 ## Manage content
 
-- **Posts:** create, edit, delete portfolio entries and optionally assign a district.
-- **Photos:** upload or enter a Cloudinary image URL, write descriptive alt text, and optionally attach it to a post. Unattached photos appear in the home gallery. Deleting a post detaches its photos. Deleting a photo removes its database entry; the recoverable source file remains in Cloudinary. Remove unused source assets there when appropriate.
+- **Posts:** create, edit, delete portfolio entries, optionally assign a district, and attach up to 20 images directly in the post editor. Each image requires descriptive alt text. Uploading files requires Cloudinary; existing `/assets/...` paths can also be entered directly.
+- **Photos:** upload or enter a Cloudinary image URL or existing `/assets/...` raster image path, write descriptive alt text, and optionally attach it to a post. Unattached photos appear in the home gallery. Deleting a post detaches its photos. Deleting a photo removes its database entry; the recoverable source file remains in Cloudinary. Remove unused source assets there when appropriate.
 - **Hero slides:** edit headings, copy, optional image, and destination link. Change the numeric display order to reorder slides. If all slides are removed, the home page retains a contact-focused fallback.
 - **Service areas:** edit district content and slugs. Changes appear on `/service-area/[slug]`, including metadata and structured data. Changing a slug changes the URL; plan redirects before changing indexed slugs.
 - **Settings:** configure analytics as described below.
 
 No work photos are supplied in the specification, so no fabricated jobs or stock photos are presented as completed work. Upload actual work images through the admin panel. The initial hero is typographic and supports uploaded photos.
+
+The home page loads only the latest portfolio preview. `/portfolio` shows 12 images per page and uses server-side URL pagination (`?page=2`, `?page=3`, and so on), so adding images does not continually increase the initial page payload.
 
 ## Cloudinary
 
@@ -45,21 +47,24 @@ Set the server-only `CLOUDINARY_URL` from your Cloudinary account (`cloudinary:/
 
 ## Google Ads tracking
 
-Set IDs and labels through `/admin/settings`. The database settings are authoritative; the `NEXT_PUBLIC_*` example keys from the business spec are not required by this implementation.
+Set IDs and labels through `/admin/settings`. Saved database settings are authoritative, including blank values that disable tracking. Before a settings row exists, `NEXT_PUBLIC_GTM_ID` and `NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID` from the README are used as defaults; optional `GOOGLE_ADS_CONVERSION_LABEL` and `GOOGLE_ADS_LINE_CONVERSION_LABEL` provide initial labels. The seed copies these defaults only when creating settings.
 
-**GTM mode (recommended):** enter a `GTM-...` container ID. Each Call/LINE click pushes `contact_click` to the data layer with `contact_channel` set to `call` or `line`. In GTM:
+**GTM mode (recommended):** enter a `GTM-...` container ID. Each Call/LINE click pushes `conversion` to the data layer with `contact_channel` (`call` or `line`), numeric `conversion_id`, `conversion_label`, and `send_to`. These values reflect the settings saved in the admin panel. In GTM:
 
 1. Install the Google tag for the Ads account and a Conversion Linker.
-2. Create a Data Layer Variable named `contact_channel`.
-3. Create two Custom Event triggers for `contact_click`, filtered to `call` and `line` respectively.
-4. Create one Google Ads Conversion Tracking tag per channel with the conversion ID and label supplied by the Google Ads team. Assign the matching trigger. The ID/label values stored in the admin panel apply to direct mode; GTM tag configuration is managed in GTM.
-5. Validate both buttons using Tag Assistant before publishing the container.
+2. Create Data Layer Variables named `contact_channel`, `conversion_id`, and `conversion_label`.
+3. Create a Custom Event trigger for `conversion`, with nonempty `conversion_id` and `conversion_label`. Optionally filter by `contact_channel` to separate reports.
+4. Create a Google Ads Conversion Tracking tag. Use the `conversion_id` and `conversion_label` Data Layer Variables for its ID and label and assign the trigger. The Google tag/account and Conversion Linker still require setup in GTM.
+5. Validate both buttons using Tag Assistant before publishing the container. If upgrading an existing container that used `contact_click`, replace that trigger with `conversion`; do not keep duplicate click-based conversion tags. No external GTM container has been changed automatically.
+
+See [Google’s conversion setup](https://support.google.com/tagmanager/answer/6105160?hl=en-GB) and [custom event triggers](https://support.google.com/tagmanager/answer/7679219?hl=en) for the tag-side configuration.
 
 **Direct mode:** leave GTM blank, then enter `AW-...`, the Call conversion label, and the LINE label. The app loads gtag and sends one `conversion` event per configured channel. Missing labels disable that channel's tracking. Using GTM disables direct events to avoid duplicate conversions. Links continue working when analytics is absent or blocked. Click tracking measures intent to contact, not a completed call or sale.
 
 ## Validation
 
 ```sh
+bun run verify:structure
 bun run lint
 bun run typecheck
 bun run test
@@ -77,3 +82,7 @@ Import this repository into Vercel as a Next.js project. Use `bun install --froz
 Admin cookies are HttpOnly, SameSite=Lax, Secure in production, and expire after eight hours. Server-side admin checks guard all protected pages and write endpoints. Login attempts are throttled per username in PostgreSQL (10 per 15-minute window). Add host-level rate limiting for a public deployment to supplement the account throttle. Serve production over HTTPS.
 
 The project has no customer accounts, online booking, payment processing, or multilingual routes, as requested in the scope.
+
+## Repository assets and requirement coverage
+
+The new `public/assets/` directory serves files at `/assets/...`; see [asset guidance](public/assets/README.md). Repository assets require a deployment; admin uploads continue to use Cloudinary. API file tracing includes the asset directory so local image existence checks also work in a packaged server deployment. The [README audit](docs/README-AUDIT.md) maps every business requirement and records the two intentional structure mappings and external validation limits.

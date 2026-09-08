@@ -1,18 +1,22 @@
 import { z } from "zod";
+import { isImageUrl } from "./assets";
+export { isImageUrl } from "./assets";
 
 export function isSafeLink(value: string) {
   return /^\/(?!\/|\\)[^\\]*$/.test(value) || /^tel:\+?[0-9-]+$/.test(value) || (() => {
     try { const url = new URL(value); return url.protocol === "https:" && !url.username && !url.password; } catch { return false; }
   })();
 }
-export function isImageUrl(value: string) {
-  try { const url = new URL(value); return url.protocol === "https:" && url.hostname === "res.cloudinary.com" && !url.username && !url.password; } catch { return false; }
-}
 const text = (max: number) => z.string().trim().min(1, "กรุณากรอกข้อมูล").max(max);
 const optionalId = z.string().trim().max(100).nullable().optional().transform(v => v || null);
-const imageUrl = z.string().max(2000).refine(v => !v || isImageUrl(v), "ใช้ URL รูปภาพ HTTPS จาก Cloudinary");
+const imageUrl = z.string().max(2000).refine(v => !v || isImageUrl(v), "ใช้รูปภาพใน /assets/ หรือ URL HTTPS จาก Cloudinary");
+const postPhoto = z.object({
+  id: z.string().trim().max(100).optional(),
+  url: imageUrl.refine(Boolean, "กรุณาเลือกรูปภาพ"),
+  alt: text(300),
+});
 export const schemas = {
-  posts: z.object({ title: text(200), content: text(20000), areaSlug: optionalId }),
+  posts: z.object({ title: text(200), content: text(20000), areaSlug: optionalId, photos: z.array(postPhoto).max(20, "เพิ่มรูปได้ไม่เกิน 20 รูปต่อผลงาน").default([]) }),
   photos: z.object({ url: imageUrl.refine(Boolean, "กรุณาอัปโหลดรูปภาพ"), alt: text(300), postId: optionalId }),
   "hero-slides": z.object({ title: text(200), subtitle: z.string().trim().max(500), imageUrl, linkUrl: z.string().max(2000).refine(isSafeLink, "ลิงก์ไม่ถูกต้อง"), sortOrder: z.coerce.number().int().min(0).max(9999) }),
   "service-areas": z.object({ name: text(100), slug: text(100).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "ใช้ตัวอักษร a-z ตัวเลข และขีดกลาง"), description: text(10000) }),

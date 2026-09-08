@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const config: NextConfig = {
   images: { remotePatterns: [{ protocol: "https", hostname: "res.cloudinary.com" }] },
+  outputFileTracingIncludes: { "/api/**": ["./public/assets/**/*"] },
   poweredByHeader: false,
   async headers() {
     return [{ source: "/:path*", headers: [

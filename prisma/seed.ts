@@ -3,6 +3,7 @@ import { loadEnvFile } from "node:process";
 import { PrismaClient } from "@prisma/client";
 import { hash } from "bcryptjs";
 import { defaultAreas, defaultSettings, defaultSlides } from "../lib/defaults";
+import { resolveTrackingSettings } from "../lib/settings";
 
 if (existsSync(".env")) loadEnvFile(".env");
 const db = new PrismaClient();
@@ -20,7 +21,7 @@ async function main() {
     for (const slide of defaultSlides) {
       await tx.heroSlide.upsert({ where: { id: slide.id }, update: {}, create: slide });
     }
-    await tx.siteSetting.upsert({ where: { id: "singleton" }, update: {}, create: defaultSettings });
+    await tx.siteSetting.upsert({ where: { id: "singleton" }, update: {}, create: { ...defaultSettings, ...resolveTrackingSettings() } });
     await tx.adminUser.upsert({ where: { username }, update: {}, create: { username, passwordHash: await hash(password, 12) } });
   }, { timeout: 30000 });
   console.log("Seed complete: 50 districts, hero slides, settings and administrator. Existing content preserved.");

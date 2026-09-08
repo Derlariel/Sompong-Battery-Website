@@ -137,6 +137,8 @@ sompong-battery/
 │   └── gtag.ts                       # Conversion event tracking helper
 ├── prisma/
 │   └── schema.prisma
+├── public/
+│   └── assets/                      # Public images, icons, and branding (see section 10)
 └── AGENTS.md                         # References this document as scope
 ```
 
@@ -215,3 +217,22 @@ CLOUDINARY_URL=
 ## 9. Business Contact Info (for use on the live site)
 - Phone: **087-252-7842**
 - LINE ID: **sompong7842**
+
+---
+
+## 10. Repository Visual Assets
+
+Store repository-managed visual resources under `public/assets/` so Next.js can serve them at `/assets/...`:
+
+```text
+public/assets/
+├── images/
+│   ├── hero/
+│   ├── portfolio/
+│   └── service-areas/
+├── icons/
+├── branding/
+└── README.md
+```
+
+Use lowercase kebab-case filenames. For example, a file at `public/assets/images/hero/on-site-battery.webp` can be entered in an admin image field as `/assets/images/hero/on-site-battery.webp`. The file must exist before saving. Cloudinary uploads remain available for publishing photos without a repository deployment. See [asset guidance](public/assets/README.md) for formats and image sizes, [setup instructions](SETUP.md) for configuration, and the [implementation audit](docs/README-AUDIT.md) for requirement coverage and the custom-JWT/protected-route-group mappings.

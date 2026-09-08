@@ -19,5 +19,5 @@ export function ContactLink({ channel, children, className }: { channel: "call" 
   </Button>;
 }
 export default function ContactCTA({ sticky = false }: { sticky?: boolean }) {
-  return <div className={sticky ? "mobile-contact" : "contact-actions"}><ContactLink channel="call" /><ContactLink channel="line" /></div>;
+  return <div className={sticky ? "mobile-contact" : "contact-actions"}><ContactLink channel="call" /><ContactLink channel="line">{sticky ? <span>แชต LINE<small className="contact-id">sompong7842</small></span> : "แชต LINE"}</ContactLink></div>;
 }

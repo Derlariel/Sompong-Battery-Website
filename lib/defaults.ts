@@ -21,12 +21,56 @@ const districts = [
 
 export const defaultAreas = districts.map(([slug, name]) => ({
   id: slug, slug, name,
-  description: `บริการเปลี่ยนแบตเตอรี่รถยนต์นอกสถานที่ในเขต${name} ตลอด 24 ชั่วโมง ไม่เว้นวันหยุด รถสตาร์ทไม่ติด แบตเตอรี่หมด โทรปรึกษาสมพงษ์แบตเตอรี่ได้ทันที ตรวจเช็กและให้คำแนะนำฟรี แจ้งพิกัดเพื่อสอบถามเวลาถึงหน้างาน โดยปกติประมาณ 30 นาที ขึ้นอยู่กับระยะทางและการจราจร รับชำระด้วยเงินสดหรือโอนเงินหลังรับบริการ`,
+  description: `บริการเปลี่ยนแบตเตอรี่รถยนต์นอกสถานที่ในเขต${name} ตลอด 24 ชั่วโมง ไม่เว้นวันหยุด รถสตาร์ทไม่ติด แบตเตอรี่หมด โทรปรึกษาสมปองแบตเตอรี่ได้ทันที ตรวจเช็กและให้คำแนะนำฟรี แจ้งพิกัดเพื่อสอบถามเวลาถึงหน้างาน โดยปกติประมาณ 30 นาที ขึ้นอยู่กับระยะทางและการจราจร รับชำระด้วยเงินสดหรือโอนเงินหลังรับบริการ`,
 }));
 
 export const defaultSlides = [
-  { id: "welcome", title: "แบตหมด รถสตาร์ทไม่ติด?\nเราพร้อมไปหาคุณ", subtitle: "เปลี่ยนแบตเตอรี่ถึงที่ ทั่วกรุงเทพฯ และปริมณฑล\nพร้อมช่วยเหลือคุณตลอด 24 ชั่วโมง", imageUrl: "", linkUrl: contact.tel, sortOrder: 0 },
-  { id: "anytime", title: "ดึกแค่ไหน\nก็อุ่นใจได้", subtitle: "ปรึกษาฟรี ตรวจเช็กฟรี ไม่เว้นวันหยุด\nโทรบอกพิกัด แล้วให้เราช่วยดูแล", imageUrl: "", linkUrl: contact.line, sortOrder: 1 },
+  {
+    id: "onsite-check",
+    // แถวแรกสีขาว (h1), แถวถัดไปจะได้ class "yellow-text" อัตโนมัติจาก HeroSwiper
+    title: "รถสตาร์ทไม่ติด\nเราไปถึงหน้ารถคุณ",
+    subtitle: "ตรวจเช็คถึงในห้องเครื่อง ไม่ต้องลากรถเข้าศูนย์",
+    imageUrl: "/assets/images/hero/้hero-1-machanic.jpg",
+    linkUrl: "https://line.me/ti/p/~sompong7842",
+  },
+  {
+    id: "porsche",
+    title: "รถหรูแค่ไหน\nก็ดูแลได้",
+    subtitle: "รถหรูแค่ไหนก็ดูแลได้ ทีมงานถึงในสายเดียว",
+    imageUrl: "/assets/images/hero/hero-2-machanic.jpg",
+    linkUrl: "https://line.me/ti/p/~sompong7842",
+  },
+  {
+    id: "lamborghini",
+    title: "กลางคืนแค่ไหน\nก็ไปถึง",
+    subtitle: "กลางคืนแค่ไหนก็ไป — สตาร์ทไม่ติดโทรได้ทันที",
+    imageUrl: "/assets/images/hero/hero-3-machanic.jpg",
+    linkUrl: "tel:0872527842",
+  },
 ];
 
 export const defaultSettings = { id: "singleton", gtmContainerId: "", googleAdsConvId: "", googleAdsConvLabel: "", lineConvLabel: "" };
+
+const portfolioFiles = [
+  ["13421.jpg", 1108, 1477],
+  ["16186.jpg", 1108, 1477],
+  ["16188.jpg", 1477, 1108],
+  ["16721.jpg", 1108, 1477],
+  ["16728.jpg", 1108, 1477],
+  ["17085.jpg", 1108, 1477],
+  ["18391.jpg", 1108, 1477],
+  ["18526.jpg", 1108, 1477],
+  ["18527.jpg", 1108, 1477],
+  ["18553.jpg", 1108, 1477],
+  ["25595.jpg", 1108, 1477],
+  ["25596.jpg", 1108, 1477],
+] as const;
+
+export const defaultPortfolioPhotos = portfolioFiles.map(([file, width, height], index) => ({
+  id: `portfolio-${file.replace(".jpg", "")}`,
+  url: `/assets/images/portfolio/${file}`,
+  alt: `ผลงานบริการเปลี่ยนแบตเตอรี่ถึงที่ ภาพที่ ${index + 1}`,
+  width,
+  height,
+  postId: null,
+}));
