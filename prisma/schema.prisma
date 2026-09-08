@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Post {
+  id        String       @id @default(cuid())
+  title     String
+  content   String
+  photos    Photo[]
+  areaSlug  String?
+  area      ServiceArea? @relation(fields: [areaSlug], references: [slug], onDelete: SetNull, onUpdate: Cascade)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String
+  publicId  String?
+  postId    String?
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+}
+
+model HeroSlide {
+  id        String @id @default(cuid())
+  imageUrl  String @default("")
+  title     String
+  subtitle  String @default("")
+  linkUrl   String @default("tel:0872527842")
+  sortOrder Int    @default(0)
+}
+
+model ServiceArea {
+  id          String @id @default(cuid())
+  slug        String @unique
+  name        String
+  description String
+  posts       Post[]
+}
+
+model SiteSetting {
+  id                 String @id @default("singleton")
+  gtmContainerId     String @default("")
+  googleAdsConvId    String @default("")
+  googleAdsConvLabel String @default("")
+  lineConvLabel      String @default("")
+}
+
+model LoginAttempt {
+  id        String   @id
+  count     Int      @default(1)
+  expiresAt DateTime
+}
