@@ -174,6 +174,9 @@ svg { flex-shrink: 0; }
 .admin-content h1 { font-size: 2rem; }
 .admin-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; }
 .admin-heading p { margin: 0; color: var(--muted); }
+.content-manager-disabled { min-width: 0; margin: 0; padding: 0; border: 0; }
+.content-manager-disabled > :not(.coming-soon-badge, .notice) { opacity: .5; }
+.coming-soon-badge { width: fit-content; margin: 0 0 .75rem; padding: .3rem .65rem; border: 1px solid #776b29; border-radius: 999px; background: #3b351b; color: #ffe86b; font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
 .admin-stat { background: var(--panel); border: 1px solid var(--border); padding: 1.5rem; border-radius: .5rem; }
 .admin-stat strong { display: block; color: var(--accent); font-size: 2rem; }

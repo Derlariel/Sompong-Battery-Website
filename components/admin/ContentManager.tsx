@@ -139,7 +139,9 @@ export default function ContentManager({ resource, rows, areas, posts }: Props) 
     finally { setBusy(false); setDeleting(null); dialog.current?.close(); }
   }
 
-  return <>
+  return <fieldset className="content-manager-disabled" disabled aria-describedby="content-manager-status">
+    <legend className="coming-soon-badge">Coming soon</legend>
+    <div id="content-manager-status" className="notice" role="status">ส่วนจัดการเนื้อหายังไม่เปิดใช้งานในขณะนี้</div>
     <div className="admin-heading"><div><p className="eyebrow">จัดการเว็บไซต์</p><h1>{resourceLabels[resource]}</h1>{resource !== "settings" && <p>ทั้งหมด {rows.length} รายการ</p>}</div>{resource !== "settings" && !draft && <Button onClick={() => { setDraft(cloneRow(blank[resource])); setError(""); setMessage(""); }}><Plus size={18} />เพิ่มรายการ</Button>}</div>
     {resource === "settings" && <div className="notice">หากใช้ GTM ให้ตั้งค่าแท็ก Google Ads Conversion ใน GTM โดยใช้เหตุการณ์ conversion และตัวแปร conversion_id, conversion_label, contact_channel (call หรือ line) หากเว้น GTM ว่าง ระบบจะส่ง conversion ผ่าน gtag โดยตรงตาม ID และ Label ที่กรอก ดูขั้นตอนใน SETUP.md</div>}
     {message && <div className="notice" role="status">{message}</div>}{error && <div className="notice notice-error" role="alert">{error}</div>}
@@ -170,5 +172,5 @@ export default function ContentManager({ resource, rows, areas, posts }: Props) 
       return <tr key={row.id}><td className="row-title"><div className="admin-row-summary">{resource === "photos" && typeof row.url === "string" && typeof row.alt === "string" && <Image src={row.url} width={100} height={65} sizes="100px" loading="lazy" alt={row.alt} />}{firstPhoto && <Image src={firstPhoto.url} width={100} height={65} sizes="100px" loading="lazy" alt={firstPhoto.alt} />}<div><span>{rowLabel(row)}</span>{resource === "posts" && <p className="muted">{row.photos?.length ?? 0} รูปภาพ</p>}{typeof row.slug === "string" && row.slug && <p className="muted">/service-area/{row.slug}</p>}</div></div></td>{resource === "hero-slides" && <td>{String(row.sortOrder ?? "")}</td>}<td><div className="table-actions"><Button variant="outline" disabled={busy || uploading} onClick={() => { setDraft(cloneRow(row)); setError(""); setMessage(""); window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }); }}><Pencil size={14} />แก้ไข</Button><Button variant="outline" disabled={busy || uploading} onClick={() => { setDeleting(row); dialog.current?.showModal(); }} aria-label={`ลบ ${rowLabel(row)}`}><Trash2 size={14} /></Button></div></td></tr>;
     })}</tbody></table> : <div className="admin-table-empty">ยังไม่มีข้อมูล เริ่มต้นด้วยปุ่ม “เพิ่มรายการ”</div>}</div>}
     <dialog ref={dialog} className="confirm-dialog" aria-labelledby="delete-title" onCancel={() => setDeleting(null)}><h2 id="delete-title" style={{ fontSize: "1.5rem" }}>ยืนยันการลบข้อมูล</h2><p>ต้องการลบ “{deleting ? rowLabel(deleting) : "รายการนี้"}” หรือไม่?</p>{resource === "photos" && <p className="muted">ลบรูปออกจากเว็บไซต์ ไฟล์ต้นฉบับยังอยู่ใน Cloudinary</p>}{resource === "posts" && <p className="muted">รูปภาพที่เกี่ยวข้องจะยังอยู่ในคลังรูปภาพ</p>}<div className="form-actions"><Button variant="outline" disabled={busy} onClick={() => { dialog.current?.close(); setDeleting(null); }}>ยกเลิก</Button><Button variant="destructive" disabled={busy} onClick={remove}>{busy ? "กำลังลบ…" : "ลบข้อมูล"}</Button></div></dialog>
-  </>;
+  </fieldset>;
 }
