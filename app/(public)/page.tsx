@@ -7,6 +7,7 @@ import ServiceCard from "@/components/ServiceCard";
 import ContactCTA from "@/components/ContactCTA";
 import AreaDirectory from "@/components/AreaDirectory";
 import PortfolioGallery from "@/components/PortfolioGallery";
+import StoreLocation from "@/components/StoreLocation";
 import { getContent } from "@/lib/content";
 import { businessSchema, jsonLd } from "@/lib/seo";
 export function generateMetadata(): Metadata {
@@ -26,5 +27,6 @@ export default async function HomePage() {
     <section className="coverage-band"><div className="container coverage-grid"><div><MapPin /><h3>ครอบคลุมทั่วกรุงเทพฯ</h3><p>พร้อมทุกวัน ไม่เว้นวันหยุด ปรึกษาและตรวจเช็กฟรี ถึงที่ประมาณ 30 นาที สอบถามเวลาถึงจริงตามพิกัดและการจราจร</p></div><div><Clock3 /><h3>พร้อมเมื่อคุณต้องการ</h3><p>รถสตาร์ทไม่ติด โทรได้ทุกเวลา บริการเปลี่ยนแบตเตอรี่โดยช่างผู้ชำนาญ พร้อมให้คำแนะนำหน้างาน</p></div><div><Wallet /><h3>จ่ายง่ายหลังรับบริการ</h3><p>รับเงินสดหรือโอนผ่านธนาคารและแอปมือถือ ชำระที่หน้างานเมื่อรับบริการเรียบร้อย</p></div></div></section>
     <section id="areas" className="section container"><div className="section-heading"><div><p className="eyebrow">ใกล้คุณ ทุกเขต</p><h2>พื้นที่ให้บริการ</h2></div><p>เลือกเขตของคุณเพื่อดูรายละเอียด<br />พื้นที่ปริมณฑล โทรสอบถามเราได้เลย</p></div><AreaDirectory areas={areas} /></section>
     {(posts.length > 0 || photos.length > 0) && <section id="portfolio" className="section portfolio-section"><div className="container"><div className="section-heading"><div><p className="eyebrow">จากหน้างานจริง</p><h2>ผลงานของเรา</h2></div><p>ภาพบริการเปลี่ยนแบตเตอรี่ถึงที่จากลูกค้าจริง<br />ดูแลโดยทีมช่างของสมปองแบตเตอรี่</p></div>{posts.length > 0 && <div className="portfolio-grid mb-8">{posts.map(post => <article className="portfolio-card" key={post.id}>{post.photos[0] && <Image src={post.photos[0].url} alt={post.photos[0].alt} width={640} height={420} sizes="(max-width: 760px) 100vw, 33vw" loading="lazy" />}<div>{post.area && <span className="eyebrow">เขต{post.area.name}</span>}<h3>{post.title}</h3><p className="pre-line">{post.content}</p></div></article>)}</div>}<PortfolioGallery photos={photos} />{portfolioTotal > photos.length && <div className="portfolio-more"><Link className="btn btn-outline" href="/portfolio">ดูผลงานทั้งหมด {portfolioTotal} ภาพ</Link></div>}</div></section>}
+    <StoreLocation />
   </main>;
 }

@@ -7,11 +7,11 @@ export default function SiteHeader() {
     <header className="site-header container">
       <Link href="/" className="brand" aria-label="สมปองแบตเตอรี่ หน้าแรก">
         <span>
-          <Image src="/assets/icons/logo.png" alt="" width={60} height={60} sizes="60px" />
+          <Image src="/assets/icons/sompong-battery-logo-horizontal.png" alt="สมปองแบตเตอรี่" width={250} height={60} />
         </span>
-        <span>สมปอง<span className="brand-sub">แบตเตอรี่ • SOMPONG BATTERY</span></span>
+        {/* <span>สมปอง<span className="brand-sub">แบตเตอรี่ • SOMPONG BATTERY</span></span> */}
       </Link>
-      <nav aria-label="เมนูหลัก"><Link href="/#services">บริการของเรา</Link><Link href="/#areas">พื้นที่ให้บริการ</Link><Link href="/#contact">ติดต่อเรา <ArrowUpRight size={15} /></Link></nav>
+      <nav aria-label="เมนูหลัก"><Link href="/#services">บริการของเรา</Link><Link href="/#areas">พื้นที่ให้บริการ</Link><Link href="/#location">ที่ตั้งร้าน</Link><Link href="/#contact">ติดต่อเรา <ArrowUpRight size={15} /></Link></nav>
       <div className="header-call"><ContactLink channel="call" /></div>
     </header></>;
 }

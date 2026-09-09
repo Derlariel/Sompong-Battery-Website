@@ -5,9 +5,8 @@ import { resourceLabels } from "@/lib/admin";
 
 export default function AdminNav() {
   const pathname = usePathname();
-  const entries = [["", "ภาพรวม"], ...Object.entries(resourceLabels)];
-  return <nav aria-label="เมนูผู้ดูแล">{entries.map(([key, label]) => {
-    const href = key ? `/admin/${key}` : "/admin";
-    return <Link href={href} key={href} aria-current={pathname === href ? "page" : undefined}>{label}</Link>;
-  })}</nav>;
+  return <nav aria-label="เมนูผู้ดูแล">
+    <Link href="/admin" aria-current={pathname === "/admin" ? "page" : undefined}>ภาพรวม</Link>
+    {Object.entries(resourceLabels).map(([key, label]) => <span className="admin-nav-disabled" aria-disabled="true" key={key}><span>{label}</span><small>Coming soon</small></span>)}
+  </nav>;
 }
