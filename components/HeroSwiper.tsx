@@ -69,7 +69,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
   return (
     <section
       aria-label="บริการเปลี่ยนแบตเตอรี่"
-      className="relative isolate mx-auto aspect-[16/8.2] w-full max-w-[1280px] overflow-hidden bg-[#081120] shadow-[0_30px_80px_rgba(0,0,0,.5)] max-[720px]:aspect-[9/14]"
+      className="relative isolate mx-auto aspect-[16/8.2] w-full max-w-[1280px] overflow-hidden bg-[#070707] shadow-[0_30px_80px_rgba(0,0,0,.65)] max-[720px]:aspect-[9/14]"
     >
       <Swiper
         modules={[A11y, Autoplay, EffectFade]}
@@ -98,7 +98,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(100deg, rgba(8,17,32,.94) 0%, rgba(8,17,32,.82) 28%, rgba(8,17,32,.35) 52%, rgba(8,17,32,.15) 68%, rgba(8,17,32,.55) 100%), linear-gradient(0deg, rgba(8,17,32,.75) 0%, rgba(8,17,32,0) 30%)",
+                    "linear-gradient(100deg, rgba(7,7,7,.96) 0%, rgba(12,7,8,.84) 28%, rgba(12,7,8,.38) 52%, rgba(7,7,7,.18) 68%, rgba(7,7,7,.62) 100%), linear-gradient(0deg, rgba(7,7,7,.82) 0%, rgba(7,7,7,0) 30%)",
                 }}
               />
             </div>
@@ -111,7 +111,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
           className="mb-[1.1em] flex w-fit items-center gap-[.55rem] rounded-[3px] bg-[#E5342B] px-[.95em] pb-[.45em] pt-[.4em] font-bold tracking-[.02em] text-white"
           style={{ fontSize: "clamp(13px, 1.6vw, 15px)" }}
         >
-          <span className="h-[7px] w-[7px] animate-pulse rounded-full bg-[#FFC53D] shadow-[0_0_0_3px_rgba(255,197,61,.35)]" />
+          <span className="h-[7px] w-[7px] animate-pulse rounded-full bg-[#FF3548] shadow-[0_0_0_3px_rgba(226,31,50,.35)]" />
           เปิดบริการ 24 ชั่วโมง ไม่มีวันหยุด
         </div>
 
@@ -125,30 +125,30 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
         >
           รถสตาร์ทไม่ติด
           <br />
-          เราไป<span className="text-[#FFC53D]">ถึงหน้ารถคุณ</span>
+          เราไป<span className="text-[#FF3548]">ถึงหน้ารถคุณ</span>
         </h1>
 
         <div className="my-[1.2em] flex items-center gap-[.6rem]">
           <svg aria-hidden="true" width="34" height="34" viewBox="0 0 34 34" fill="none" className="shrink-0">
             <path d="M6 6 C6 20, 14 20, 14 30" stroke="#E5342B" strokeWidth="2.5" strokeLinecap="round" />
             <rect x="2" y="2" width="8" height="8" rx="2" fill="#E5342B" />
-            <path d="M28 6 C28 20, 20 20, 20 30" stroke="#3A3F46" strokeWidth="2.5" strokeLinecap="round" />
-            <rect x="24" y="2" width="8" height="8" rx="2" fill="#9FB0C4" />
+            <path d="M28 6 C28 20, 20 20, 20 30" stroke="#555" strokeWidth="2.5" strokeLinecap="round" />
+            <rect x="24" y="2" width="8" height="8" rx="2" fill="#B9B2B4" />
           </svg>
-          <p className="m-0 text-[#9FB0C4]" style={{ fontSize: "clamp(14px, 1.7vw, 16.5px)", lineHeight: 1.55 }}>
+          <p className="m-0 text-[#B9B2B4]" style={{ fontSize: "clamp(14px, 1.7vw, 16.5px)", lineHeight: 1.55 }}>
             เช็คระบบไฟ ตรวจไดร์ชาร์จ-ไดร์สตาร์ท และเปลี่ยนแบตเตอรี่นอกสถานที่ทั่วกรุงเทพฯ
             โดยปกติประมาณ 30 นาที ขึ้นอยู่กับพิกัดและการจราจร
           </p>
         </div>
 
-        <p className="mb-[1.6em] min-h-[1.4em] text-[#9FB0C4]" style={{ fontSize: "clamp(13px, 1.6vw, 15px)" }}>
+        <p className="mb-[1.6em] min-h-[1.4em] text-[#B9B2B4]" style={{ fontSize: "clamp(13px, 1.6vw, 15px)" }}>
           {activeSlide.caption}
         </p>
 
         <div className="flex flex-wrap gap-[.85rem]">
           <a
             href="tel:0872527842"
-            className="inline-flex items-center gap-[.55rem] rounded-[4px] bg-[#FFC53D] px-[1.5em] py-[.9em] font-semibold text-[#081120] transition duration-200 hover:-translate-y-0.5 hover:brightness-110"
+            className="inline-flex items-center gap-[.55rem] rounded-[4px] bg-[#E21F32] px-[1.5em] py-[.9em] font-semibold text-white shadow-[0_10px_28px_rgba(226,31,50,.22)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#FF3548]"
             style={{ fontSize: "clamp(14px, 1.8vw, 16.5px)", lineHeight: 1.5 }}
             onClick={() => window.gtag?.("event", "conversion", { send_to: "AW-CONVERSION_ID/CALL_LABEL" })}
           >
@@ -170,7 +170,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
       </div>
 
       <div
-        className="absolute bottom-[6%] left-[6%] z-30 flex items-center gap-[.5em] text-[#9FB0C4] max-[720px]:hidden"
+        className="absolute bottom-[6%] left-[6%] z-30 flex items-center gap-[.5em] text-[#B9B2B4] max-[720px]:hidden"
         style={{ fontSize: "clamp(11px, 1.3vw, 13px)" }}
       >
         Sompong Battery <b className="font-semibold tracking-[.02em] text-[#F4F6F9]">·</b> บริการทุกเขตในกรุงเทพฯ
@@ -181,7 +181,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
           <button
             type="button"
             onClick={toggleAutoplay}
-            className={`grid h-11 w-11 place-items-center rounded-full border transition ${isPaused ? "border-[#FFC53D] bg-[#FFC53D] text-[#081120]" : "border-white/30 bg-[#081120]/75 text-white hover:border-[#FFC53D] hover:text-[#FFC53D]"}`}
+            className={`grid h-11 w-11 place-items-center rounded-full border transition ${isPaused ? "border-[#E21F32] bg-[#E21F32] text-white" : "border-white/30 bg-black/75 text-white hover:border-[#FF3548] hover:text-[#FF3548]"}`}
             aria-label={isPaused ? "เล่นสไลด์อัตโนมัติ" : "หยุดสไลด์อัตโนมัติ"}
             aria-pressed={isPaused}
             title={isPaused ? "เล่นสไลด์อัตโนมัติ" : "หยุดสไลด์อัตโนมัติ"}
@@ -196,7 +196,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
               aria-current={active === index ? "true" : undefined}
               onClick={() => { swiper?.autoplay.stop(); setIsPaused(true); swiper?.slideToLoop(index); }}
               className="grid h-11 w-11 place-items-center border-0 bg-transparent p-0"
-            ><span className="h-1 w-[26px] rounded-sm transition-colors duration-200" style={{ background: active === index ? "#FFC53D" : "rgba(255,255,255,.32)" }} /></button>
+            ><span className="h-1 w-[26px] rounded-sm transition-colors duration-200" style={{ background: active === index ? "#E21F32" : "rgba(255,255,255,.32)" }} /></button>
           ))}
         </div>
       )}
