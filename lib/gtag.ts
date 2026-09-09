@@ -6,6 +6,14 @@ declare global {
   }
 }
 export function trackContact(channel: "call" | "line", config: TrackingConfig) {
+  const path = window.location?.pathname || "/";
+  void fetch("/api/analytics/click", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ channel, path }),
+    keepalive: true,
+  }).catch(() => undefined);
+
   const label = channel === "call" ? config.googleAdsConvLabel : config.lineConvLabel;
   if (/^GTM-[A-Z0-9]+$/.test(config.gtmContainerId)) {
     window.dataLayer = window.dataLayer || [];

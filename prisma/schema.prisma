@@ -66,3 +66,13 @@ model LoginAttempt {
   count     Int      @default(1)
   expiresAt DateTime
 }
+
+model ClickEvent {
+  id        String   @id @default(cuid())
+  channel   String
+  path      String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([channel, createdAt])
+}

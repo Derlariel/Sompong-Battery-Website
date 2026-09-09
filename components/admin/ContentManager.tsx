@@ -139,9 +139,7 @@ export default function ContentManager({ resource, rows, areas, posts }: Props) 
     finally { setBusy(false); setDeleting(null); dialog.current?.close(); }
   }
 
-  return <fieldset className="content-manager-disabled" disabled aria-describedby="content-manager-status">
-    <legend className="coming-soon-badge">Coming soon</legend>
-    <div id="content-manager-status" className="notice" role="status">ส่วนจัดการเนื้อหายังไม่เปิดใช้งานในขณะนี้</div>
+  return <fieldset className="content-manager">
     <div className="admin-heading"><div><p className="eyebrow">จัดการเว็บไซต์</p><h1>{resourceLabels[resource]}</h1>{resource !== "settings" && <p>ทั้งหมด {rows.length} รายการ</p>}</div>{resource !== "settings" && !draft && <Button onClick={() => { setDraft(cloneRow(blank[resource])); setError(""); setMessage(""); }}><Plus size={18} />เพิ่มรายการ</Button>}</div>
     {resource === "settings" && <div className="notice">หากใช้ GTM ให้ตั้งค่าแท็ก Google Ads Conversion ใน GTM โดยใช้เหตุการณ์ conversion และตัวแปร conversion_id, conversion_label, contact_channel (call หรือ line) หากเว้น GTM ว่าง ระบบจะส่ง conversion ผ่าน gtag โดยตรงตาม ID และ Label ที่กรอก ดูขั้นตอนใน SETUP.md</div>}
     {message && <div className="notice" role="status">{message}</div>}{error && <div className="notice notice-error" role="alert">{error}</div>}

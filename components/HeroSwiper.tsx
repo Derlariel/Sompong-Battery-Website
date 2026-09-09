@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { MessageCircle, Pause, Phone, Play } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { A11y, Autoplay, EffectFade } from "swiper/modules";
 import type { defaultSlides } from "@/lib/defaults";
+import { ContactLink } from "@/components/ContactCTA";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
@@ -69,7 +70,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
   return (
     <section
       aria-label="บริการเปลี่ยนแบตเตอรี่"
-      className="relative isolate mx-auto aspect-[16/8.2] w-full max-w-[1280px] overflow-hidden bg-[#070707] shadow-[0_30px_80px_rgba(0,0,0,.65)] max-[720px]:aspect-[9/14]"
+      className="relative isolate aspect-[16/7.6] min-h-[560px] max-h-[760px] w-full overflow-hidden bg-[#070707] max-[720px]:aspect-[9/14] max-[720px]:min-h-[600px] max-[720px]:max-h-none"
     >
       <Swiper
         modules={[A11y, Autoplay, EffectFade]}
@@ -91,7 +92,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
                 alt={slide.alt}
                 fill
                 priority={index === 0}
-                sizes="(max-width: 720px) 100vw, 1280px"
+                sizes="100vw"
                 className="object-cover [filter:saturate(1.05)_contrast(1.03)]"
               />
               <div
@@ -146,26 +147,8 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
         </p>
 
         <div className="flex flex-wrap gap-[.85rem]">
-          <a
-            href="tel:0872527842"
-            className="inline-flex items-center gap-[.55rem] rounded-[4px] bg-[#E21F32] px-[1.5em] py-[.9em] font-semibold text-white shadow-[0_10px_28px_rgba(226,31,50,.22)] transition duration-200 hover:-translate-y-0.5 hover:bg-[#FF3548]"
-            style={{ fontSize: "clamp(14px, 1.8vw, 16.5px)", lineHeight: 1.5 }}
-            onClick={() => window.gtag?.("event", "conversion", { send_to: "AW-CONVERSION_ID/CALL_LABEL" })}
-          >
-            <Phone aria-hidden="true" size={18} fill="currentColor" />
-            โทร 087-252-7842
-          </a>
-          <a
-            href="https://line.me/ti/p/~sompong7842"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-[.55rem] rounded-[4px] border-[1.5px] border-white/50 px-[1.5em] py-[.9em] font-semibold text-[#F4F6F9] transition duration-200 hover:-translate-y-0.5 hover:brightness-110"
-            style={{ fontSize: "clamp(14px, 1.8vw, 16.5px)", lineHeight: 1.5 }}
-            onClick={() => window.gtag?.("event", "conversion", { send_to: "AW-CONVERSION_ID/LINE_LABEL" })}
-          >
-            <MessageCircle aria-hidden="true" size={18} fill="currentColor" />
-            แชท LINE
-          </a>
+          <ContactLink channel="call" className="hero-call-button">โทร 087-252-7842</ContactLink>
+          <ContactLink channel="line" className="hero-line-button">แชท LINE</ContactLink>
         </div>
       </div>
 
