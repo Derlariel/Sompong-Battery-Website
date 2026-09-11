@@ -25,7 +25,7 @@ for (const path of ["/", "/service-area/bang-na", "/service-area/phra-nakhon", "
     assert.match(body, /application\/ld\+json/);
     assert.ok(body.includes(`rel="canonical" href="${process.env.SITE_URL || "http://127.0.0.1:3000"}${path}"`));
   }
-  if (path === "/sitemap.xml") assert.equal((body.match(/<loc>/g) || []).length, 51);
+  if (path === "/sitemap.xml") assert.equal((body.match(/<loc>/g) || []).length, 52);
   if (path === "/robots.txt") assert.match(body, /Disallow: \/admin/);
   console.log(`PASS ${path}`);
 }
@@ -35,7 +35,7 @@ for (let offset = 0; offset < districtPaths.length; offset += 5) {
     assert.equal(response.status, 200, path);
   }));
 }
-console.log(`PASS all ${districtPaths.length} district pages`);
+console.log(`PASS all ${districtPaths.length} service-area pages`);
 for (const path of ["/admin", "/admin/posts", "/admin/photos", "/admin/hero-slides", "/admin/service-areas", "/admin/settings"]) {
   const response = await fetch(base + path, { redirect: "manual" });
   assert.equal(response.status, 307, path);

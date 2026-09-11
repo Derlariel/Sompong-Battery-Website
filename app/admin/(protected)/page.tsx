@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Activity, ArrowUpRight, FileText, Images, MapPinned, MessageCircleMore, MousePointerClick, PhoneCall, Presentation } from "lucide-react";
-import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import VisitorStats from "@/components/VisitorStats";
 
 const DAY = 24 * 60 * 60 * 1000;
 const dayFormatter = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Bangkok", year: "numeric", month: "2-digit", day: "2-digit" });
@@ -9,7 +9,6 @@ const shortDateFormatter = new Intl.DateTimeFormat("th-TH", { timeZone: "Asia/Ba
 const dateTimeFormatter = new Intl.DateTimeFormat("th-TH", { timeZone: "Asia/Bangkok", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
 export default async function Dashboard() {
-  await requireAdmin();
   const now = new Date();
   const since30Days = new Date(now.getTime() - 29 * DAY);
   const [clicks, recentClicks, contentCounts] = await Promise.all([
@@ -50,7 +49,8 @@ export default async function Dashboard() {
       <div className="admin-live"><span />ข้อมูลล่าสุด ณ {dateTimeFormatter.format(now)} น.</div>
     </div>
 
-    <section className="admin-stats" aria-label="สถิติการคลิก 30 วัน">
+    <section className="admin-stats" aria-label="สถิติผู้ใช้งานและการคลิก">
+      <VisitorStats />
       {stats.map(({ label, value, icon: Icon, tone }) => <article className="admin-stat" key={label}>
         <span className={`admin-stat-icon ${tone}`}><Icon size={21} /></span>
         <div><span>{label}</span><strong>{value.toLocaleString("th-TH")}</strong></div>

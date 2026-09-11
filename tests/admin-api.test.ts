@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-const mocks = vi.hoisted(() => ({ getAdmin: vi.fn(), sameOrigin: vi.fn(), create: vi.fn(), update: vi.fn(), remove: vi.fn(), findMany: vi.fn(), localImageExists: vi.fn() }));
+const mocks = vi.hoisted(() => ({ getAdmin: vi.fn(), sameOrigin: vi.fn(), create: vi.fn(), update: vi.fn(), remove: vi.fn(), findMany: vi.fn(), localImageExists: vi.fn(), revalidatePath: vi.fn() }));
 vi.mock("@/lib/auth", () => ({ getAdmin: mocks.getAdmin, sameOrigin: mocks.sameOrigin }));
 vi.mock("@/lib/prisma", () => ({ prisma: { post: { create: mocks.create, update: mocks.update, delete: mocks.remove, findMany: mocks.findMany }, photo: { create: mocks.create, findMany: mocks.findMany }, serviceArea: { findMany: mocks.findMany } } }));
 vi.mock("@/lib/asset-files", () => ({ localImageExists: mocks.localImageExists }));
+vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 import { POST, DELETE } from "../app/api/admin/[resource]/route";
 import * as postsApi from "../app/api/posts/route";
 import * as photosApi from "../app/api/photos/route";

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { getAdmin, sameOrigin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -37,6 +38,7 @@ export async function mutateResource(request: Request, resource: string) {
           const saved = id
             ? await prisma.post.update({ where: { id }, data: { ...data, photos: { deleteMany: { id: { notIn: photos.flatMap(photo => photo.id ? [photo.id] : []) } }, update: existingPhotos, create: newPhotos } } })
             : await prisma.post.create({ data: { ...data, photos: { create: newPhotos } } });
+          revalidatePath("/", "layout");
           return NextResponse.json({ ok: true, id: saved.id });
         }
         case "photos": { const data = schemas.photos.parse(body); if (id) await prisma.photo.update({ where: { id }, data }); else await prisma.photo.create({ data }); break; }
@@ -45,6 +47,7 @@ export async function mutateResource(request: Request, resource: string) {
         case "settings": { const data = schemas.settings.parse(body); await prisma.siteSetting.upsert({ where: { id: "singleton" }, create: data, update: data }); break; }
       }
     }
+    revalidatePath("/", "layout");
     return NextResponse.json({ ok: true });
   } catch (error) {
     if (error instanceof Error && error.name === "ZodError") return NextResponse.json({ error: "ข้อมูลไม่ถูกต้อง กรุณาตรวจสอบช่องที่กรอกและรูปแบบลิงก์" }, { status: 400 });

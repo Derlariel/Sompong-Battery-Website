@@ -32,6 +32,6 @@ async function main() {
       create: { username, passwordHash },
     }),
   ]);
-  console.log("Seed complete: 50 districts, hero slides, settings and administrator. Existing content preserved.");
+  console.log(`Seed complete: ${defaultAreas.length} service areas, hero slides, settings and administrator. Existing content preserved.`);
 }
 main().catch(error => { console.error(error.message); process.exitCode = 1; }).finally(() => db.$disconnect());

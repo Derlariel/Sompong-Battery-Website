@@ -76,3 +76,19 @@ model ClickEvent {
   @@index([createdAt])
   @@index([channel, createdAt])
 }
+
+model VisitorSession {
+  id        String   @id
+  path      String
+  updatedAt DateTime @updatedAt
+
+  @@index([updatedAt])
+}
+
+model VisitEvent {
+  id        String   @id @default(cuid())
+  path      String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

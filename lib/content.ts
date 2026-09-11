@@ -23,8 +23,13 @@ export const getSettings = cache(async () => {
 });
 
 export const getAreas = cache(async () => process.env.DATABASE_URL
-  ? prisma.serviceArea.findMany({ orderBy: { name: "asc" } })
+  ? mergeDefaultAreas(await prisma.serviceArea.findMany())
   : defaultAreas);
+
+function mergeDefaultAreas(savedAreas: Awaited<ReturnType<typeof prisma.serviceArea.findMany>>) {
+  const savedBySlug = new Map(savedAreas.map(area => [area.slug, area]));
+  return defaultAreas.map(area => ({ ...area, ...savedBySlug.get(area.slug) }));
+}
 
 export async function getPortfolioPage(page: number, pageSize = PORTFOLIO_PAGE_SIZE) {
   const currentPage = Number.isSafeInteger(page) && page > 0 ? page : 1;
@@ -67,14 +72,14 @@ export const getContent = cache(async () => {
   if (!process.env.DATABASE_URL) {
     if (process.env.VERCEL_ENV === "production") throw new Error("DATABASE_URL is required for production deployment.");
     const portfolio = await getPortfolioPage(1, HOME_PORTFOLIO_LIMIT);
-    return { areas: defaultAreas, slides: defaultSlides, settings: await getSettings(), posts: [] as Awaited<ReturnType<typeof getHomePosts>>, photos: portfolio.photos, portfolioTotal: portfolio.totalItems };
+    return { areas: defaultAreas, slides: defaultSlides, posts: [] as Awaited<ReturnType<typeof getHomePosts>>, photos: portfolio.photos, portfolioTotal: portfolio.totalItems };
   }
-  const [areas, slides, settings, posts, portfolio] = await Promise.all([
+  const [areas, slides, posts, portfolio] = await Promise.all([
     getAreas(),
     prisma.heroSlide.findMany({ orderBy: [{ sortOrder: "asc" }, { id: "asc" }] }),
-    getSettings(), getHomePosts(), getPortfolioPage(1, HOME_PORTFOLIO_LIMIT),
+    getHomePosts(), getPortfolioPage(1, HOME_PORTFOLIO_LIMIT),
   ]);
-  return { areas, slides, settings: settings ?? defaultSettings, posts, photos: portfolio.photos, portfolioTotal: portfolio.totalItems };
+  return { areas, slides, posts, photos: portfolio.photos, portfolioTotal: portfolio.totalItems };
 });
 function getHomePosts() { return prisma.post.findMany({ take: 3, include: { photos: { take: 1, orderBy: { createdAt: "asc" } }, area: true }, orderBy: { createdAt: "desc" } }); }
 
@@ -84,7 +89,7 @@ export const getAreaContent = cache(async (slug: string) => {
     prisma.serviceArea.findUnique({ where: { slug } }),
     getAreaPosts(slug),
   ]);
-  return { area, posts };
+  return { area: area ?? defaultAreas.find(item => item.slug === slug) ?? null, posts };
 });
 
 function getAreaPosts(slug: string) {

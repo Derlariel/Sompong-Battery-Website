@@ -18,6 +18,8 @@ describe("hero contact journey", () => {
   it("renders one main heading and the configured hero slides", () => {
     const html = renderToStaticMarkup(createElement(HeroSwiper, { slides: defaultSlides }));
     expect((html.match(/<h1\b/g) || []).length).toBe(1);
+    expect(html).toContain("รถสตาร์ทไม่ติด?");
+    expect(html).toContain("เปลี่ยนแบตถึงที่ 24 ชม.");
     expect(html).toContain('aria-label="บริการเปลี่ยนแบตเตอรี่"');
     expect(html).toContain('aria-label="ไปยังสไลด์ 1"');
     expect(html).toContain('aria-label="ไปยังสไลด์ 2"');

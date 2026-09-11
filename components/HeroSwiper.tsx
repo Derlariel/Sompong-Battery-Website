@@ -70,7 +70,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
   return (
     <section
       aria-label="บริการเปลี่ยนแบตเตอรี่"
-      className="relative isolate aspect-[16/7.6] min-h-[560px] max-h-[760px] w-full overflow-hidden bg-[#070707] max-[720px]:aspect-[9/14] max-[720px]:min-h-[600px] max-[720px]:max-h-none"
+      className="relative isolate aspect-[16/8] min-h-[620px] max-h-[820px] w-full overflow-hidden bg-[#070707] max-[720px]:aspect-[9/14] max-[720px]:min-h-[660px] max-[720px]:max-h-none"
     >
       <Swiper
         modules={[A11y, Autoplay, EffectFade]}
@@ -107,46 +107,27 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
         ))}
       </Swiper>
 
-      <div className="absolute inset-0 z-20 flex h-full max-w-[640px] flex-col justify-center px-[6%] pb-[7%] pt-[6.5%] max-[720px]:max-w-none max-[720px]:px-[7%] max-[720px]:pb-[14%] max-[720px]:pt-[9%]">
-        <div
-          className="mb-[1.1em] flex w-fit items-center gap-[.55rem] rounded-[3px] bg-[#E5342B] px-[.95em] pb-[.45em] pt-[.4em] font-bold tracking-[.02em] text-white"
-          style={{ fontSize: "clamp(13px, 1.6vw, 15px)" }}
-        >
-          <span className="h-[7px] w-[7px] animate-pulse rounded-full bg-[#FF3548] shadow-[0_0_0_3px_rgba(226,31,50,.35)]" />
-          เปิดบริการ 24 ชั่วโมง ไม่มีวันหยุด
+      <div className="absolute inset-0 z-20 flex h-full max-w-[780px] flex-col justify-center px-[6%] pb-[7%] pt-[6.5%] max-[720px]:max-w-none max-[720px]:px-[7%] max-[720px]:pb-[14%] max-[720px]:pt-[9%]">
+        <div className="hero-kicker">
+          <span aria-hidden="true" />
+          บริการแบตเตอรี่ฉุกเฉิน · กรุงเทพฯ
         </div>
 
-        <h1
-          className="font-extrabold text-[#F4F6F9]"
-          style={{
-            fontSize: "clamp(30px, 4.6vw, 54px)",
-            lineHeight: 1.12,
-            letterSpacing: "-.01em",
-          }}
-        >
-          รถสตาร์ทไม่ติด
-          <br />
-          เราไป<span className="text-[#FF3548]">ถึงหน้ารถคุณ</span>
+        <h1 className="hero-message">
+          รถสตาร์ทไม่ติด?
+          <span>เปลี่ยนแบตถึงที่ 24 ชม.</span>
         </h1>
 
-        <div className="my-[1.2em] flex items-center gap-[.6rem]">
-          <svg aria-hidden="true" width="34" height="34" viewBox="0 0 34 34" fill="none" className="shrink-0">
-            <path d="M6 6 C6 20, 14 20, 14 30" stroke="#E5342B" strokeWidth="2.5" strokeLinecap="round" />
-            <rect x="2" y="2" width="8" height="8" rx="2" fill="#E5342B" />
-            <path d="M28 6 C28 20, 20 20, 20 30" stroke="#555" strokeWidth="2.5" strokeLinecap="round" />
-            <rect x="24" y="2" width="8" height="8" rx="2" fill="#B9B2B4" />
-          </svg>
-          <p className="m-0 text-[#B9B2B4]" style={{ fontSize: "clamp(14px, 1.7vw, 16.5px)", lineHeight: 1.55 }}>
-            เช็คระบบไฟ ตรวจไดร์ชาร์จ-ไดร์สตาร์ท และเปลี่ยนแบตเตอรี่นอกสถานที่ทั่วกรุงเทพฯ
-            โดยปกติประมาณ 30 นาที ขึ้นอยู่กับพิกัดและการจราจร
-          </p>
-        </div>
+        <p className="hero-lede">
+          โทรครั้งเดียว ช่างไปตรวจระบบไฟและเปลี่ยนแบตให้ถึงหน้ารถ
+          <br className="max-[540px]:hidden" /> ทั่วกรุงเทพฯ โดยปกติประมาณ 30 นาที
+        </p>
 
-        <p className="mb-[1.6em] min-h-[1.4em] text-[#B9B2B4]" style={{ fontSize: "clamp(13px, 1.6vw, 15px)" }}>
+        <p className="hero-caption">
           {activeSlide.caption}
         </p>
 
-        <div className="flex flex-wrap gap-[.85rem]">
+        <div className="flex flex-wrap gap-[.85rem]" aria-label="ติดต่อขอรับบริการ">
           <ContactLink channel="call" className="hero-call-button">โทร 087-252-7842</ContactLink>
           <ContactLink channel="line" className="hero-line-button">แชท LINE</ContactLink>
         </div>
@@ -156,7 +137,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
         className="absolute bottom-[6%] left-[6%] z-30 flex items-center gap-[.5em] text-[#B9B2B4] max-[720px]:hidden"
         style={{ fontSize: "clamp(11px, 1.3vw, 13px)" }}
       >
-        Sompong Battery <b className="font-semibold tracking-[.02em] text-[#F4F6F9]">·</b> บริการทุกเขตในกรุงเทพฯ
+        Sompong Battery <b className="font-semibold tracking-[.02em] text-[#F4F6F9]">·</b> บริการทั่วกรุงเทพฯ
       </div>
 
       {hasMultipleSlides && (

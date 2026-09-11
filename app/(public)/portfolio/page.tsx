@@ -5,6 +5,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import PortfolioGallery from "@/components/PortfolioGallery";
 import { getPortfolioPage } from "@/lib/content";
 
+export const revalidate = 300;
 type Props = { searchParams: Promise<{ page?: string | string[] }> };
 
 function pageHref(page: number) {
