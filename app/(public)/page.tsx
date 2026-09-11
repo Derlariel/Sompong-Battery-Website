@@ -8,6 +8,7 @@ import ContactCTA from "@/components/ContactCTA";
 import AreaDirectory from "@/components/AreaDirectory";
 import PortfolioGallery from "@/components/PortfolioGallery";
 import StoreLocation from "@/components/StoreLocation";
+import ServiceGallery from "@/components/ServiceGallery";
 import { getContent } from "@/lib/content";
 import { businessSchema, jsonLd } from "@/lib/seo";
 export const revalidate = 300;
@@ -22,7 +23,7 @@ export default async function HomePage() {
     <div className="assurance-bar container"><span><Check />พร้อมบริการทุกวัน</span><span><Check />ตรวจเช็กก่อนเปลี่ยน</span><span><Check />แจ้งราคาก่อนทำงาน</span><span><Check />ชำระหลังรับบริการ</span></div>
     <section className="service-context section container" aria-labelledby="service-context-title">
       <div className="service-context-media">
-        <Image src="/assets/images/service-areas/service-car.jpg" alt="ช่างกำลังตรวจเช็กแบตเตอรี่รถยนต์นอกสถานที่" width={2048} height={1536} sizes="(max-width: 760px) calc(100vw - 36px), 50vw" />
+        <Image src="/assets/images/service-areas/service-car.jpg" alt="ช่างกำลังตรวจเช็กแบตเตอรี่รถยนต์นอกสถานที่" width={2048} height={1536} sizes="(max-width: 760px) calc(100vw - 36px), 58vw" />
       </div>
       <div className="service-context-copy">
         <p className="eyebrow">บริการถึงที่ · พร้อมตลอด 24 ชั่วโมง</p>
@@ -38,7 +39,9 @@ export default async function HomePage() {
         <p className="service-context-thanks">ขอบคุณที่ใช้บริการและไว้วางใจเรา</p>
       </div>
     </section>
-    <section id="services" className="section container"><div className="section-heading"><div><p className="eyebrow">บริการของเรา</p><h2>เรื่องแบตเตอรี่<br />ให้เราดูแลถึงที่</h2></div><p>ไม่ต้องหารถลาก ไม่ต้องเข้าร้าน<br />รับคำปรึกษา พร้อมบริการที่จุดจอดรถของคุณ</p></div><div className="service-grid">{[
+    <section id="services" className="section container"><div className="section-heading"><div><p className="eyebrow">บริการของเรา</p><h2>เรื่องแบตเตอรี่<br />ให้เราดูแลถึงที่</h2></div><p>ไม่ต้องหารถลาก ไม่ต้องเข้าร้าน<br />รับคำปรึกษา พร้อมบริการที่จุดจอดรถของคุณ</p></div>
+      <ServiceGallery />
+      <div className="service-grid">{[
       { icon: BatteryCharging, number: "01", title: "เปลี่ยนแบตเตอรี่ถึงที่", text: "แนะนำแบตเตอรี่ให้เหมาะกับรุ่นรถ พร้อมติดตั้งและตรวจเช็กหลังเปลี่ยน" },
       { icon: Wrench, number: "02", title: "ตรวจเช็กและให้คำปรึกษา", text: "รถสตาร์ทไม่ติด หรือไม่แน่ใจว่าแบตเสื่อม โทรปรึกษาและตรวจเช็กเบื้องต้นฟรี" },
       { icon: Clock3, number: "03", title: "ช่วยเหลือตลอด 24 ชม.", text: "เช้า กลางวัน หรือกลางดึก ทีมงานพร้อมรับสายทุกวัน ไม่เว้นวันหยุด" },
