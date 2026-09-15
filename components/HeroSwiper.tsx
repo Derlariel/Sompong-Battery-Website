@@ -70,7 +70,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
   return (
     <section
       aria-label="บริการเปลี่ยนแบตเตอรี่"
-      className="relative isolate aspect-[16/8] min-h-[620px] max-h-[820px] w-full overflow-hidden bg-[#070707] max-[720px]:aspect-[9/14] max-[720px]:min-h-[660px] max-[720px]:max-h-none"
+      className="hero-showcase relative isolate aspect-[16/8] min-h-[620px] max-h-[820px] w-full overflow-hidden max-[720px]:aspect-[9/14] max-[720px]:min-h-[660px] max-[720px]:max-h-none"
     >
       <Swiper
         modules={[A11y, Autoplay, EffectFade]}
@@ -95,13 +95,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
                 sizes="100vw"
                 className="object-cover [filter:saturate(1.05)_contrast(1.03)]"
               />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(100deg, rgba(7,7,7,.96) 0%, rgba(12,7,8,.84) 28%, rgba(12,7,8,.38) 52%, rgba(7,7,7,.18) 68%, rgba(7,7,7,.62) 100%), linear-gradient(0deg, rgba(7,7,7,.82) 0%, rgba(7,7,7,0) 30%)",
-                }}
-              />
+              <div className="hero-slide-overlay absolute inset-0" />
             </div>
           </SwiperSlide>
         ))}
@@ -134,10 +128,10 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
       </div>
 
       <div
-        className="absolute bottom-[6%] left-[6%] z-30 flex items-center gap-[.5em] text-[#B9B2B4] max-[720px]:hidden"
+        className="hero-watermark absolute bottom-[6%] left-[6%] z-30 flex items-center gap-[.5em] max-[720px]:hidden"
         style={{ fontSize: "clamp(11px, 1.3vw, 13px)" }}
       >
-        Sompong Battery <b className="font-semibold tracking-[.02em] text-[#F4F6F9]">·</b> บริการทั่วกรุงเทพฯ
+        Sompong Battery <b className="hero-watermark-dot font-semibold tracking-[.02em]">·</b> บริการทั่วกรุงเทพฯ
       </div>
 
       {hasMultipleSlides && (
@@ -145,7 +139,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
           <button
             type="button"
             onClick={toggleAutoplay}
-            className={`grid h-11 w-11 place-items-center rounded-full border transition ${isPaused ? "border-[#E21F32] bg-[#E21F32] text-white" : "border-white/30 bg-black/75 text-white hover:border-[#FF3548] hover:text-[#FF3548]"}`}
+            className={`hero-control grid h-11 w-11 place-items-center rounded-full border transition${isPaused ? " is-active" : ""}`}
             aria-label={isPaused ? "เล่นสไลด์อัตโนมัติ" : "หยุดสไลด์อัตโนมัติ"}
             aria-pressed={isPaused}
             title={isPaused ? "เล่นสไลด์อัตโนมัติ" : "หยุดสไลด์อัตโนมัติ"}
@@ -160,7 +154,7 @@ export default function HeroSwiper({ slides: configuredSlides }: { slides: typeo
               aria-current={active === index ? "true" : undefined}
               onClick={() => { swiper?.autoplay.stop(); setIsPaused(true); swiper?.slideToLoop(index); }}
               className="grid h-11 w-11 place-items-center border-0 bg-transparent p-0"
-            ><span className="h-1 w-[26px] rounded-sm transition-colors duration-200" style={{ background: active === index ? "#E21F32" : "rgba(255,255,255,.32)" }} /></button>
+            ><span className={`hero-dot h-1 w-[26px] rounded-sm transition-colors duration-200${active === index ? " is-active" : ""}`} /></button>
           ))}
         </div>
       )}
