@@ -4,6 +4,7 @@ out/
 coverage/
 .env*
 !.env.example
+*-firebase-adminsdk-*.json
 *.tsbuildinfo
 .vercel/
 test-results/

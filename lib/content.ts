@@ -44,13 +44,13 @@ export const getAreas = cache(async (): Promise<Area[]> => {
 
 async function prismaPortfolioPage(page: number, pageSize: number) {
   const skip = (page - 1) * pageSize;
-  if (!process.env.DATABASE_URL) return { count: 0, savedDefaultUrls: new Set<string>(), photos: [] as PublicPortfolioPhoto[] };
+  if (!process.env.DATABASE_URL) return { count: 0, savedDefaultUrls: [] as string[], photos: [] as PublicPortfolioPhoto[] };
   const defaultUrls = defaultPortfolioPhotos.map(photo => photo.url);
   const [count, savedDefaults, photos] = await Promise.all([
     prisma.photo.count(), prisma.photo.findMany({ where: { url: { in: defaultUrls } }, select: { url: true } }),
     prisma.photo.findMany({ skip, take: pageSize, include: { post: { select: { title: true, area: { select: { name: true } } } } }, orderBy: [{ createdAt: "desc" }, { id: "desc" }] }),
   ]);
-  return { count, savedDefaultUrls: new Set(savedDefaults.map(item => item.url)), photos: photos.map(item => ({ id: item.id, url: item.url, alt: item.alt, postTitle: item.post?.title, areaName: item.post?.area?.name })) };
+  return { count, savedDefaultUrls: savedDefaults.map(item => item.url), photos: photos.map(item => ({ id: item.id, url: item.url, alt: item.alt, postTitle: item.post?.title, areaName: item.post?.area?.name })) };
 }
 
 export async function getPortfolioPage(page: number, pageSize = PORTFOLIO_PAGE_SIZE) {
@@ -58,10 +58,11 @@ export async function getPortfolioPage(page: number, pageSize = PORTFOLIO_PAGE_S
   const safePageSize = Math.min(Math.max(pageSize, 1), 24);
   const skip = (currentPage - 1) * safePageSize;
   const result = await firebaseOrFallback(
-    () => unstable_cache(() => firestorePortfolioPage(currentPage, safePageSize, defaultPortfolioPhotos.map(item => item.url)), ["portfolio", String(currentPage), String(safePageSize)], { tags: ["photos", "posts", "service-areas"], revalidate: 300 })(),
+    () => unstable_cache(() => firestorePortfolioPage(currentPage, safePageSize, defaultPortfolioPhotos.map(item => item.url)), ["portfolio-v2", String(currentPage), String(safePageSize)], { tags: ["photos", "posts", "service-areas"], revalidate: 300 })(),
     () => prismaPortfolioPage(currentPage, safePageSize),
   );
-  const fallbackPhotos = defaultPortfolioPhotos.filter(item => !result.savedDefaultUrls.has(item.url));
+  const savedDefaultUrls = new Set(Array.isArray(result.savedDefaultUrls) ? result.savedDefaultUrls : []);
+  const fallbackPhotos = defaultPortfolioPhotos.filter(item => !savedDefaultUrls.has(item.url));
   const fallbackStart = Math.max(0, skip - result.count);
   const fallbackTake = Math.max(0, safePageSize - result.photos.length);
   const photos: PublicPortfolioPhoto[] = [...result.photos, ...fallbackPhotos.slice(fallbackStart, fallbackStart + fallbackTake)];

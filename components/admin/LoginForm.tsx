@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BatteryCharging } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { inMemoryPersistence, setPersistence, signInWithEmailAndPassword } from "firebase/auth";
+import { inMemoryPersistence, setPersistence, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { firebaseClientAuth } from "@/lib/firebase/client";
 export default function LoginForm({ configured, firebaseMode }: { configured: boolean; firebaseMode: boolean }) {
   const router = useRouter();
@@ -19,7 +19,8 @@ export default function LoginForm({ configured, firebaseMode }: { configured: bo
       if (firebaseMode) {
         const auth = firebaseClientAuth();
         await setPersistence(auth, inMemoryPersistence);
-        body = { idToken: await (await signInWithEmailAndPassword(auth, String(credentials.email), String(credentials.password))).user.getIdToken() };
+        if (auth.currentUser) await signOut(auth);
+        body = { idToken: await (await signInWithEmailAndPassword(auth, String(credentials.email), String(credentials.password))).user.getIdToken(true) };
       }
       const response = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const result = await response.json();

@@ -97,7 +97,7 @@ export async function firestorePortfolioPage(page: number, pageSize: number, def
   const names = new Map(areaDocuments.filter(document => document.exists).map(document => [document.id, String(document.data()!.name)]));
   return {
     count: countSnapshot.data().count,
-    savedDefaultUrls: new Set(savedDefaults?.docs.map(document => String(document.data().url)) ?? []),
+    savedDefaultUrls: savedDefaults?.docs.map(document => String(document.data().url)) ?? [],
     photos: values.map(value => ({ ...value, postTitle: value.postId ? String(posts.get(value.postId)?.title ?? "") || undefined : undefined, areaName: value.postId ? names.get(String(posts.get(value.postId)?.areaSlug)) : undefined })),
   };
 }
