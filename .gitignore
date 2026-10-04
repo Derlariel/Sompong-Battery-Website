@@ -5,6 +5,7 @@ coverage/
 .env*
 !.env.example
 *-firebase-adminsdk-*.json
+/sompong-battery-*.json
 *.tsbuildinfo
 .vercel/
 test-results/
