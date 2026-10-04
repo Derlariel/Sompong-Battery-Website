@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
 import { getAdmin, sameOrigin } from "@/lib/auth";
 export const runtime = "nodejs";
 export async function POST(request: Request) {
@@ -8,6 +7,7 @@ export async function POST(request: Request) {
   if (!process.env.CLOUDINARY_URL) return NextResponse.json({ error: "กรุณาตั้งค่า CLOUDINARY_URL ก่อนอัปโหลด" }, { status: 503 });
   if (Number(request.headers.get("content-length")) > 4 * 1024 * 1024) return NextResponse.json({ error: "รูปภาพต้องมีขนาดไม่เกิน 3 MB" }, { status: 413 });
   try {
+    const { v2: cloudinary } = await import("cloudinary");
     const form = await request.formData();
     const file = form.get("file");
     if (!(file instanceof File) || file.size > 3 * 1024 * 1024 || file.size === 0 || !["image/jpeg", "image/png", "image/webp"].includes(file.type)) return NextResponse.json({ error: "เลือกภาพ JPG, PNG หรือ WebP ขนาดไม่เกิน 3 MB" }, { status: 400 });
