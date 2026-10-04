@@ -9,3 +9,4 @@ coverage/
 .vercel/
 test-results/
 *.log
+/backup_db/
