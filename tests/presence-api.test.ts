@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({ sameOrigin: vi.fn(), count: vi.fn(), create: vi.fn() }));
 vi.mock("@/lib/origin", () => ({ sameOrigin: mocks.sameOrigin }));
 vi.mock("@/lib/prisma", () => ({ prisma: { visitEvent: { create: mocks.create, count: mocks.count } } }));
+vi.mock("@/lib/firebase/firestore", () => ({ firestoreVisitStats: vi.fn(), writeVisitEvent: vi.fn() }));
 
 import { GET, POST } from "../app/api/analytics/presence/route";
 import { visitPeriods } from "../lib/visit-periods";

@@ -10,7 +10,7 @@ for (const path of ["/", "/service-area/bang-na", "/service-area/phra-nakhon", "
   if (path === "/") {
     assert.match(body, /tel:0872527842/);
     assert.match(body, /https:\/\/line.me\/ti\/p\/~sompong7842/);
-    assert.equal((body.match(/href="\/service-area\//g) || []).length, 50);
+    assert.equal((body.match(/href="\/service-area\//g) || []).length, 51);
     assert.match(body, /<h1/);
     assert.equal((body.match(/<h1\b/g) || []).length, 1);
     districtPaths = [...body.matchAll(/href="(\/service-area\/[^"?]+)"/g)].map(match => match[1]);
@@ -23,9 +23,9 @@ for (const path of ["/", "/service-area/bang-na", "/service-area/phra-nakhon", "
     const name = path.endsWith("bang-na") ? "บางนา" : "พระนคร";
     assert.match(body, new RegExp(`<title>[^<]*${name}`));
     assert.match(body, /application\/ld\+json/);
-    assert.ok(body.includes(`rel="canonical" href="${process.env.SITE_URL || "http://127.0.0.1:3000"}${path}"`));
+    assert.ok(body.includes(`rel="canonical" href="${process.env.SITE_URL || "https://www.sompong-battery.com"}${path}"`));
   }
-  if (path === "/sitemap.xml") assert.equal((body.match(/<loc>/g) || []).length, 52);
+  if (path === "/sitemap.xml") assert.equal((body.match(/<loc>/g) || []).length, 53);
   if (path === "/robots.txt") assert.match(body, /Disallow: \/admin/);
   console.log(`PASS ${path}`);
 }

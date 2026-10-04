@@ -1,6 +1,6 @@
 # Sompong Battery setup
 
-The business specification remains in `README.md`. This implementation uses Next.js 15 App Router, TypeScript, Tailwind CSS, a shadcn-style Radix button, Swiper, Prisma/PostgreSQL, signed JWT admin sessions, and Cloudinary uploads. All customer-facing content is Thai.
+The business specification remains in `README.md`. This implementation uses Next.js 15 App Router, TypeScript, Tailwind CSS, a shadcn-style Radix button, Swiper, and Cloudinary uploads. Firebase Authentication and Firestore are implemented behind a staged cutover switch; Prisma/PostgreSQL remain temporarily available for migration and verified fallback. See [the Firebase migration runbook](docs/FIREBASE-MIGRATION.md).
 
 ## Run locally
 
@@ -11,9 +11,11 @@ bun install --frozen-lockfile
 bun dev
 ```
 
-Open http://127.0.0.1:3000. Without `DATABASE_URL`, public pages show read-only starter content and all 50 district pages. Admin login stays disabled. No fake admin account, browser-local CMS, or sample customer jobs are provided.
+Open http://127.0.0.1:3000. Without a configured data source, public pages show read-only starter content, the Bangkok overview, and all 50 district pages. Admin login stays disabled. No fake admin account, browser-local CMS, or sample customer jobs are provided.
 
-## Connect PostgreSQL and create an admin
+## Connect the staged data source and create an admin
+
+For Firebase setup and cutover, follow [docs/FIREBASE-MIGRATION.md](docs/FIREBASE-MIGRATION.md). Keep `DATA_SOURCE=prisma` until migration and verification succeed. The legacy PostgreSQL instructions below remain only for the fallback period.
 
 1. Copy `.env.example` to `.env` and fill in `DATABASE_URL` for a PostgreSQL database. Use a direct connection for migrations if your provider's pooled endpoint does not support them.
 2. Set `NEXTAUTH_SECRET` to a cryptographically random value of at least 32 characters. Generate one with `node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'))"`.
@@ -77,9 +79,9 @@ Tests cover CMS input validation, all district seed slugs, session signature/tam
 
 ## Deploy to Vercel
 
-Import this repository into Vercel as a Next.js project. Use `bun install --frozen-lockfile` and `bun run build`. Set `DATABASE_URL`, `NEXTAUTH_SECRET`, `CLOUDINARY_URL`, and both URL variables to the final HTTPS origin. Apply `bun run db:deploy` through a controlled deployment step, and seed once against that database before opening the site. Do not run migrations or seeding automatically on every build. Production Vercel deployments require a database; build-time previews do not silently mask a configured database failure.
+Import this repository into Vercel as a Next.js project. Use `bun install --frozen-lockfile` and `bun run build`. During the staged migration, configure both the legacy database variables and the Firebase variables from `.env.example`; set both URL variables to the final HTTPS origin. Do not run migration or seed commands automatically on every build. Follow the runbook to change `DATA_SOURCE` only after verification.
 
-Admin cookies are HttpOnly, SameSite=Lax, Secure in production, and expire after eight hours. Server-side admin checks guard all protected pages and write endpoints. Login attempts are throttled per username in PostgreSQL (10 per 15-minute window). Add host-level rate limiting for a public deployment to supplement the account throttle. Serve production over HTTPS.
+Admin cookies are HttpOnly, SameSite=Lax, Secure in production, and expire after eight hours. Server-side admin checks guard all protected pages and write endpoints. In Firebase mode, only users with the explicit `admin: true` custom claim can create a server session; Firebase handles password verification and abuse protection. Serve production over HTTPS.
 
 The project has no customer accounts, online booking, payment processing, or multilingual routes, as requested in the scope.
 

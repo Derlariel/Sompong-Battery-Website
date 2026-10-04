@@ -3,12 +3,14 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { sameOrigin } from "@/lib/origin";
 import { visitPeriods } from "@/lib/visit-periods";
+import { firestoreVisitStats, writeVisitEvent } from "@/lib/firebase/firestore";
 
 const presenceSchema = z.object({ path: z.string().startsWith("/").max(300) });
 
 export async function GET() {
   try {
     const periods = visitPeriods();
+    if (process.env.DATA_SOURCE === "firebase") return NextResponse.json(await firestoreVisitStats(periods), { headers: { "Cache-Control": "no-store" } });
     const [daily, weekly, monthly, total] = await Promise.all([
       prisma.visitEvent.count({ where: { createdAt: { gte: periods.today } } }),
       prisma.visitEvent.count({ where: { createdAt: { gte: periods.week } } }),
@@ -28,7 +30,8 @@ export async function POST(request: Request) {
   try {
     const parsed = presenceSchema.safeParse(await request.json());
     if (!parsed.success) return NextResponse.json({ error: "ข้อมูลไม่ถูกต้อง" }, { status: 400 });
-    await prisma.visitEvent.create({ data: parsed.data });
+    if (process.env.DATA_SOURCE === "firebase") await writeVisitEvent(parsed.data.path);
+    else await prisma.visitEvent.create({ data: parsed.data });
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error("Presence tracking failed", error instanceof Error ? error.name : "UnknownError");

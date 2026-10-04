@@ -7,10 +7,12 @@ declare global {
 }
 export function trackContact(channel: "call" | "line", config: TrackingConfig) {
   const path = window.location?.pathname || "/";
+  const query = new URLSearchParams(window.location?.search || "");
+  const areaSlug = path.startsWith("/service-area/") ? path.split("/")[2] : undefined;
   void fetch("/api/analytics/click", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ channel, path }),
+    body: JSON.stringify({ channel, path, areaSlug, utmSource: query.get("utm_source") || undefined, utmMedium: query.get("utm_medium") || undefined, utmCampaign: query.get("utm_campaign") || undefined }),
     keepalive: true,
   }).catch(() => undefined);
 

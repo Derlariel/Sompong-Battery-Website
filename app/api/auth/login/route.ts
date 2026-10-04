@@ -5,8 +5,24 @@ import { prisma } from "@/lib/prisma";
 import { sameOrigin, sessionCookie } from "@/lib/auth";
 import { signSession } from "@/lib/session";
 import { loginSchema } from "@/lib/validation";
+import { z } from "zod";
+import { createFirebaseAdminSession, firebaseSessionMaxAge } from "@/lib/firebase/auth";
 export async function POST(request: Request) {
   if (!sameOrigin(request)) return NextResponse.json({ error: "ไม่อนุญาตคำขอนี้" }, { status: 403 });
+  if (process.env.DATA_SOURCE === "firebase") {
+    try {
+      const parsed = z.object({ idToken: z.string().min(100).max(10000) }).safeParse(await request.json());
+      if (!parsed.success) return NextResponse.json({ error: "ข้อมูลเข้าสู่ระบบไม่ถูกต้อง" }, { status: 400 });
+      const cookie = await createFirebaseAdminSession(parsed.data.idToken);
+      if (!cookie) return NextResponse.json({ error: "บัญชีนี้ไม่มีสิทธิ์ผู้ดูแล" }, { status: 403 });
+      const response = NextResponse.json({ ok: true });
+      response.cookies.set(sessionCookie, cookie, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: firebaseSessionMaxAge });
+      return response;
+    } catch (error) {
+      console.error("Firebase login failed", error instanceof Error ? error.name : "UnknownError");
+      return NextResponse.json({ error: "อีเมลหรือรหัสผ่านไม่ถูกต้อง หรือบัญชีไม่มีสิทธิ์ผู้ดูแล" }, { status: 401 });
+    }
+  }
   if (!process.env.DATABASE_URL || !process.env.NEXTAUTH_SECRET || process.env.NEXTAUTH_SECRET.length < 32) return NextResponse.json({ error: "กรุณาตั้งค่าฐานข้อมูลและระบบเข้าสู่ระบบก่อนใช้งาน" }, { status: 503 });
   try {
     const parsed = loginSchema.safeParse(await request.json());

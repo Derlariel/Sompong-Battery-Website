@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Activity, ArrowUpRight, FileText, Images, MapPinned, MessageCircleMore, MousePointerClick, PhoneCall, Presentation } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import VisitorStats from "@/components/VisitorStats";
+import { firestoreDashboard } from "@/lib/firebase/firestore";
+import { requireAdmin } from "@/lib/auth";
 
 const DAY = 24 * 60 * 60 * 1000;
 const dayFormatter = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Bangkok", year: "numeric", month: "2-digit", day: "2-digit" });
@@ -9,17 +11,23 @@ const shortDateFormatter = new Intl.DateTimeFormat("th-TH", { timeZone: "Asia/Ba
 const dateTimeFormatter = new Intl.DateTimeFormat("th-TH", { timeZone: "Asia/Bangkok", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
 export default async function Dashboard() {
+  await requireAdmin();
   const now = new Date();
   const since30Days = new Date(now.getTime() - 29 * DAY);
-  const [clicks, recentClicks, contentCounts] = await Promise.all([
-    prisma.clickEvent.findMany({ where: { createdAt: { gte: since30Days } }, select: { channel: true, createdAt: true } }),
-    prisma.clickEvent.findMany({ take: 8, orderBy: { createdAt: "desc" }, select: { id: true, channel: true, path: true, createdAt: true } }),
-    Promise.all([prisma.post.count(), prisma.photo.count(), prisma.heroSlide.count(), prisma.serviceArea.count()]),
-  ]);
+  const dashboard = process.env.DATA_SOURCE === "firebase" ? await firestoreDashboard(since30Days) : await (async () => {
+    const [periodClicks, recentClicks, contentCounts, total, call, line] = await Promise.all([
+      prisma.clickEvent.findMany({ where: { createdAt: { gte: since30Days } }, select: { id: true, channel: true, path: true, createdAt: true } }),
+      prisma.clickEvent.findMany({ take: 8, orderBy: { createdAt: "desc" }, select: { id: true, channel: true, path: true, createdAt: true } }),
+      Promise.all([prisma.post.count(), prisma.photo.count(), prisma.heroSlide.count(), prisma.serviceArea.count()]),
+      prisma.clickEvent.count(), prisma.clickEvent.count({ where: { channel: "call" } }), prisma.clickEvent.count({ where: { channel: "line" } }),
+    ]);
+    return { periodClicks, recentClicks, contentCounts, totals: { total, call, line } };
+  })();
+  const { periodClicks: clicks, recentClicks, contentCounts, totals } = dashboard;
 
   const todayKey = dayFormatter.format(now);
-  const callCount = clicks.filter(click => click.channel === "call").length;
-  const lineCount = clicks.filter(click => click.channel === "line").length;
+  const callCount = totals.call;
+  const lineCount = totals.line;
   const todayCount = clicks.filter(click => dayFormatter.format(click.createdAt) === todayKey).length;
   const days = Array.from({ length: 14 }, (_, index) => {
     const date = new Date(now.getTime() - (13 - index) * DAY);
@@ -27,11 +35,11 @@ export default async function Dashboard() {
     return { key, label: shortDateFormatter.format(date), count: clicks.filter(click => dayFormatter.format(click.createdAt) === key).length };
   });
   const maxDaily = Math.max(1, ...days.map(day => day.count));
-  const totalClicks = clicks.length;
+  const totalClicks = totals.total;
   const channelTotal = Math.max(1, callCount + lineCount);
 
   const stats = [
-    { label: "คลิกทั้งหมด 30 วัน", value: totalClicks, icon: MousePointerClick, tone: "red" },
+    { label: "คลิกทั้งหมด", value: totalClicks, icon: MousePointerClick, tone: "red" },
     { label: "คลิกวันนี้", value: todayCount, icon: Activity, tone: "blue" },
     { label: "คลิกโทรศัพท์", value: callCount, icon: PhoneCall, tone: "green" },
     { label: "คลิก LINE", value: lineCount, icon: MessageCircleMore, tone: "orange" },
@@ -70,7 +78,7 @@ export default async function Dashboard() {
       </section>
 
       <section className="dashboard-card channel-card">
-        <div className="dashboard-card-heading"><div><h2>ช่องทางติดต่อ</h2><p>สัดส่วนจาก 30 วันล่าสุด</p></div></div>
+        <div className="dashboard-card-heading"><div><h2>ช่องทางติดต่อ</h2><p>สัดส่วนทั้งหมด</p></div></div>
         <div className="channel-total"><strong>{totalClicks.toLocaleString("th-TH")}</strong><span>คลิกทั้งหมด</span></div>
         <div className="channel-row"><div><span><PhoneCall size={16} />โทรศัพท์</span><strong>{callCount}</strong></div><div className="channel-track"><span style={{ width: `${callCount / channelTotal * 100}%` }} /></div></div>
         <div className="channel-row line"><div><span><MessageCircleMore size={16} />LINE</span><strong>{lineCount}</strong></div><div className="channel-track"><span style={{ width: `${lineCount / channelTotal * 100}%` }} /></div></div>
