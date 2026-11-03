@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { siteUrl } from "@/lib/seo";
+import GoogleTagManager from "@/lib/google-tag-manager";
 import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -13,5 +14,10 @@ export const metadata: Metadata = {
   openGraph: { locale: "th_TH", type: "website", siteName: "สมปองแบตเตอรี่", title: "สมปองแบตเตอรี่ | เปลี่ยนแบตเตอรี่ถึงที่ 24 ชั่วโมง", description: "รถสตาร์ทไม่ติด แบตหมด โทร 087-252-7842 บริการทั่วกรุงเทพฯ" },
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="th"><body>{children}</body></html>;
+  return <html lang="th">
+    <head>
+      <GoogleTagManager />
+    </head>
+    <body>{children}</body>
+  </html>;
 }

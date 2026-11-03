@@ -1,7 +1,10 @@
 import Script from "next/script";
 import type { TrackingConfig } from "@/lib/gtag";
+import { GTM_CONTAINER_ID } from "@/lib/google-tag-manager";
 
 export default function Analytics({ config }: { config: TrackingConfig }) {
+  // This container is already loaded on every page by the root layout.
+  if (config.gtmContainerId === GTM_CONTAINER_ID) return null;
   if (/^GTM-[A-Z0-9]+$/.test(config.gtmContainerId)) {
     return <Script id="gtm" strategy="afterInteractive">{`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',${JSON.stringify(config.gtmContainerId)});`}</Script>;
   }
